@@ -101,7 +101,9 @@ pip3.12 install uv
 # ===================== 6. 安装 AstrBot =====================
 info "安装 AstrBot..."
 cd "$HOME"
-uv tool install astrbot && astrbot init
+mkdir AstrBot
+cd AstrBot
+ uv tool install astrbot && astrbot init
 
 # ===================== 7. 安装 NapCat =====================
 info "安装 NapCat..."
