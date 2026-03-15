@@ -24,36 +24,58 @@ if [ ! -d "${PYTHON_DIR}" ]; then
   wget -q "${PYTHON_SRC_URL}" -P "$HOME"
   info "解压源码..."
   tar -xf "$HOME/Python-${PYTHON_VERSION}.tar.xz" -C "$HOME"
+else
+  info "检测到 Python 源码目录已存在: ${PYTHON_DIR}"
 fi
 
-# ===================== 3. 编译安装Python（你给的优化脚本） =====================
-info "开始编译安装 Python ${PYTHON_VERSION}（高优化版）"
-cd "${PYTHON_DIR}"
-make clean >/dev/null 2>&1 || true
+# ===================== 3. 编译安装Python（重复编译检测） =====================
+# 检查Python是否已安装
+if command -v python3.12 >/dev/null 2>&1; then
+    INSTALLED_VERSION=$(python3.12 --version 2>&1 | awk '{print $2}')
+    if [ "$INSTALLED_VERSION" = "$PYTHON_VERSION" ]; then
+        info "检测到 Python ${PYTHON_VERSION} 已安装，跳过编译安装"
+        info "Python 路径: $(which python3.12)"
+    else
+        info "检测到不同版本的 Python (${INSTALLED_VERSION})，继续安装 ${PYTHON_VERSION}"
+        NEED_COMPILE=true
+    fi
+else
+    info "未检测到 Python 3.12，开始编译安装"
+    NEED_COMPILE=true
+fi
 
-CFLAGS="-O3 -march=native -pipe" \
-CXXFLAGS="-O3 -march=native -pipe" \
-./configure \
-  --prefix="${INSTALL_PREFIX}" \
-  --enable-optimizations \
-  --with-lto=full \
-  --enable-shared \
-  --enable-ipv6 \
-  --enable-loadable-sqlite-extensions \
-  --with-computed-gotos \
-  --with-dbmliborder=gdbm:bdb \
-  --with-ensurepip=install \
-  --without-selinux \
-  --disable-test-modules
+# 如果需要编译，则执行编译安装
+if [ "${NEED_COMPILE:-false}" = true ]; then
+    info "开始编译安装 Python ${PYTHON_VERSION}（高优化版）"
+    cd "${PYTHON_DIR}"
+    make clean >/dev/null 2>&1 || true
 
-info "多线程编译..."
-make -j$(nproc) PROFILE_TASK="-m test.regrtest --pgo -j$(nproc)"
+    CFLAGS="-O3 -march=native -pipe" \
+    CXXFLAGS="-O3 -march=native -pipe" \
+    ./configure \
+      --prefix="${INSTALL_PREFIX}" \
+      --enable-optimizations \
+      --with-lto=full \
+      --enable-shared \
+      --enable-ipv6 \
+      --enable-loadable-sqlite-extensions \
+      --with-computed-gotos \
+      --with-dbmliborder=gdbm:bdb \
+      --with-ensurepip=install \
+      --without-selinux \
+      --disable-test-modules
 
-info "安装 Python..."
-make install
+    info "多线程编译..."
+    make -j$(nproc) PROFILE_TASK="-m test.regrtest --pgo -j$(nproc)"
 
-info "更新动态链接库..."
-ldconfig "${INSTALL_PREFIX}/lib"
+    info "安装 Python..."
+    make install
+
+    info "更新动态链接库..."
+    ldconfig "${INSTALL_PREFIX}/lib"
+else
+    info "✅ 跳过 Python 编译安装"
+fi
 
 # ===================== 4. 配置环境变量 =====================
 info "配置 python/pip 默认 3.12"
@@ -91,9 +113,22 @@ https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \
 --tui
 
 # =================== 额外变量 ===================
-echo "export TZ='Asia/Shanghai'
-export UV_LINK_MODE=copy
-cd AstrBot && uv run main.py &" >> ~/.bashrc
+# =================== 额外变量 ===================
+# 定义要添加的内容
+TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
+UV_LINK_CONFIG='export UV_LINK_MODE=copy'
+ASTRBOT_AUTOSTART='cd $HOME/AstrBot && uv run main.py &'
+
+# 检查并添加配置（避免重复）
+for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
+    if ! grep -qF "$config" ~/.bashrc; then
+        echo "$config" >> ~/.bashrc
+        info "已添加: $config"
+    else
+        info "已存在，跳过: $config"
+    fi
+done
+
 
 # ===================== 完成 =====================
 info "===================================================="
