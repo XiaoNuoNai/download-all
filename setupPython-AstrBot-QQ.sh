@@ -92,7 +92,7 @@ done
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 # 立即生效
 export PATH="/usr/local/bin:$PATH"
- export PATH="$HOME/.local/bin:$PATH
+ export PATH="$HOME/.local/bin:$PATH"
 
 # ===================== 5. 安装 uv =====================
 info "安装 uv..."
