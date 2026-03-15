@@ -103,6 +103,8 @@ uv tool install astrbot && astrbot init
 
 # ===================== 7. 安装 NapCat =====================
 info "安装 NapCat..."
+  # 安装sudo
+    apt-get install -y sudo
 cd "$HOME"
 curl -o \
 napcat.sh \
@@ -110,7 +112,6 @@ https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \
 && bash napcat.sh \
 --tui
 
-# =================== 额外变量 ===================
 # =================== 额外变量 ===================
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
