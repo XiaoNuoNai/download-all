@@ -99,9 +99,7 @@ pip3.12 install uv
 # ===================== 6. 安装 AstrBot =====================
 info "安装 AstrBot..."
 cd "$HOME"
-git clone https://github.com/Soulter/AstrBot.git || true
-cd AstrBot
-uv run main.py &
+uv tool install astrbot && astrbot init
 
 # ===================== 7. 安装 NapCat =====================
 info "安装 NapCat..."
@@ -117,7 +115,7 @@ https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
-ASTRBOT_AUTOSTART='cd $HOME/AstrBot && uv run main.py &'
+ASTRBOT_AUTOSTART='astrbot &'
 
 # 检查并添加配置（避免重复）
 for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
