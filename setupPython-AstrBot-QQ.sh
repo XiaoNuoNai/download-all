@@ -86,7 +86,7 @@ ALIAS_PIP='alias pip="pip3.12"'
 for f in "$HOME/.bashrc" "$HOME/.profile"; do
   grep -qxF "${PATH_CONFIG}" "$f" || echo "${PATH_CONFIG}" >> "$f"
   grep -qxF "${ALIAS_PY}" "$f" || echo "${ALIAS_PY}" >> "$f"
-  grep -qxF "${ALIAS_PIP}" "$f" || echo "${ALIAS_PIP}" >> "$f"  # 这里添加了 "$f"
+  grep -qxF "${ALIAS_PIP}" "$f" || echo "${ALIAS_PIP}" >> "$f"
 done
 
 # 立即生效
@@ -94,7 +94,7 @@ export PATH="/usr/local/bin:$PATH"
 
 # ===================== 5. 安装 uv =====================
 info "安装 uv..."
-pip install uv
+pip3.12 install uv
 
 # ===================== 6. 安装 AstrBot =====================
 info "安装 AstrBot..."
