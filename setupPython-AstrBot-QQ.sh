@@ -111,8 +111,7 @@ cd "$HOME"
 curl -o \
 napcat.sh \
 https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \
-&& bash napcat.sh \
---tui
+&& bash napcat.sh
 
 # =================== 额外变量 ===================
 # 定义要添加的内容
