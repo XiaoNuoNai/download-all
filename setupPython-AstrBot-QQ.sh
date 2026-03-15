@@ -89,8 +89,10 @@ for f in "$HOME/.bashrc" "$HOME/.profile"; do
   grep -qxF "${ALIAS_PIP}" "$f" || echo "${ALIAS_PIP}" >> "$f"
 done
 
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 # 立即生效
 export PATH="/usr/local/bin:$PATH"
+ export PATH="$HOME/.local/bin:$PATH
 
 # ===================== 5. 安装 uv =====================
 info "安装 uv..."
@@ -116,7 +118,7 @@ https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
-ASTRBOT_AUTOSTART='astrbot &'
+ASTRBOT_AUTOSTART='astrbot run &'
 
 # 检查并添加配置（避免重复）
 for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
@@ -130,8 +132,10 @@ done
 
 
 # ===================== 完成 =====================
-info "===================================================="
+info "=================================================="
 info "✅ 全自动安装完成！"
 info "Python 3.12.12 + uv + AstrBot + NapCat 已全部部署"
-info "请执行：source ~/.bashrc  使环境完全生效"
-info "===================================================="
+info "瞌睡猫管理面板在:127.0.0.1:6099"
+info "AstrBot的管理面板在:127.0.0.1:6185"
+info "在浏览器里输这些就可以去看啦~"
+info "================================================="
