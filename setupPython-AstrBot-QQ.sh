@@ -33,8 +33,9 @@ fi
 if command -v python3.12 >/dev/null 2>&1; then
     INSTALLED_VERSION=$(python3.12 --version 2>&1 | awk '{print $2}')
     if [ "$INSTALLED_VERSION" = "$PYTHON_VERSION" ]; then
-        info "检测到 Python ${PYTHON_VERSION} 已安装，跳过编译安装"
+        info "✅ 检测到 Python ${PYTHON_VERSION} 已安装，跳过编译安装"
         info "Python 路径: $(which python3.12)"
+        NEED_COMPILE=false
     else
         info "检测到不同版本的 Python (${INSTALLED_VERSION})，继续安装 ${PYTHON_VERSION}"
         NEED_COMPILE=true
@@ -92,30 +93,72 @@ done
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 # 立即生效
 export PATH="/usr/local/bin:$PATH"
- export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # ===================== 5. 安装 uv =====================
-info "安装 uv..."
-pip3.12 install uv
+info "检查 uv 安装状态..."
+if command -v uv >/dev/null 2>&1; then
+    UV_VERSION=$(uv --version 2>&1 | head -n1)
+    info "✅ 检测到 uv 已安装: $UV_VERSION"
+    info "uv 路径: $(which uv)"
+else
+    info "未检测到 uv，开始安装..."
+    pip3.12 install uv
+    if command -v uv >/dev/null 2>&1; then
+        info "✅ uv 安装成功"
+    else
+        error "uv 安装失败"
+    fi
+fi
 
 # ===================== 6. 安装 AstrBot =====================
-info "安装 AstrBot..."
-cd "$HOME"
-mkdir -p AstrBot
-cd AstrBot
- uv tool install astrbot && echo -e "y\ny\n" | astrbot init
+info "检查 AstrBot 安装状态..."
+ASTRBOT_DIR="$HOME/AstrBot"
+if [ -d "$ASTRBOT_DIR" ] && command -v astrbot >/dev/null 2>&1; then
+    ASTRBOT_VERSION=$(astrbot --version 2>&1 | head -n1 || echo "版本未知")
+    info "✅ 检测到 AstrBot 已安装在: $ASTRBOT_DIR"
+    info "AstrBot 版本: $ASTRBOT_VERSION"
+else
+    info "未检测到 AstrBot，开始安装..."
+    cd "$HOME"
+    mkdir -p AstrBot
+    cd AstrBot
+    uv tool install astrbot && echo -e "y\ny\n" | astrbot init
+    if [ -d "$ASTRBOT_DIR" ] && command -v astrbot >/dev/null 2>&1; then
+        info "✅ AstrBot 安装成功"
+    else
+        error "AstrBot 安装失败"
+    fi
+fi
 
 # ===================== 7. 安装 NapCat =====================
-info "安装 NapCat..."
-  # 安装sudo
+info "检查 NapCat 安装状态..."
+NAPCAT_DIR="/root/Napcat"
+NAPCAT_SCRIPT="napcat.sh"
+
+if [ -d "$NAPCAT_DIR" ] && [ -f "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json" ]; then
+    info "✅ 检测到 NapCat 已安装在: $NAPCAT_DIR"
+    # 检查NapCat是否运行（可选）
+    if pgrep -f "napcat" >/dev/null 2>&1; then
+        info "NapCat 服务正在运行"
+    else
+        info "NapCat 服务未运行"
+    fi
+else
+    info "未检测到 NapCat，开始安装..."
+    # 安装sudo（如果未安装）
     apt-get install -y sudo
-cd "$HOME"
-curl -o \
-napcat.sh \
-https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh \
-&& bash napcat.sh
+    cd "$HOME"
+    curl -o "$NAPCAT_SCRIPT" "https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh" && bash "$NAPCAT_SCRIPT"
+    if [ -d "$NAPCAT_DIR" ]; then
+        info "✅ 猫猫框架安装成功˙"
+    else
+        error "NapCat 安装失败"
+    fi
+fi
 
 # =================== 额外变量 ===================
+info "配置环境变量..."
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
@@ -131,12 +174,64 @@ for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
     fi
 done
 
-
 # ===================== 完成 =====================
 info "=================================================="
-info "✅ 全自动安装完成！"
-info "Python 3.12.12 + uv + AstrBot + NapCat 已全部部署"
+info "✅ 全都完成了哦"
 info "瞌睡猫管理面板在:127.0.0.1:6099"
 info "AstrBot的管理面板在:127.0.0.1:6185"
-info "在浏览器里输这些就可以去看啦~"
-info "================================================="
+echo "猫猫面板token:$(sed -n 's/.*"token": *"\([^"]*\)".*/\1/p' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json)"
+info "=================================================="
+
+# ===================== 用户交互：打开链接 =====================
+export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
+
+# 获取NapCat的token（如果存在）
+NAPcat_TOKEN=""
+if [ -f "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json" ]; 键，然后
+    NAPcat_TOKEN=$(sed -n 's/.*"token": *"\([^"]*\)".*/\1/p' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json 2>/dev/null || echo "")
+fi
+
+# 构建完整URL
+NAPcat_URL="http://127.0.0.1:6099/webui?token=${NAPcat_TOKEN}"
+ASTRBOT_URL="http://127.0.0.1:6185"
+
+# 询问是否打开NapCat面板
+echo ""
+read -p "是否打开NapCat(猫猫框架)管理面板？(y/n): " open_napcat
+if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
+    info "正在打开NapCat管理面板..."
+    if command -v termux-open >/dev/null 2>&1; then
+        termux-open "$NAPcat_URL"
+        info "✅ NapCat面板已打开"
+    else
+        info "termux-open命令不可用，请手动打开链接："
+        echo "$NAPcat_URL"
+    fi
+else
+    info "跳过打开NapCat面板"
+fi
+
+# 询问是否打开AstrBot面板
+echo ""
+read -p "是否打开AstrBot(机器人框架)管理面板？(y/n): " open_astrbot
+if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
+    info "正在打开AstrBot管理面板..."
+    if command -v termux-open >/dev/null 2>&1; then
+        termux-open "$ASTRBOT_URL"
+        info "✅ AstrBot应该打开啦˙"
+    else
+        info "termux-open命令不可用，请手动打开链接："
+        echo "$ASTRBOT_URL"
+    fi
+else
+    info "跳过打开AstrBot面板"
+fi
+
+# ===================== 最终提示 =====================
+echo ""
+info "=================================================="
+info "🎉 安装流程全部完成！"
+info "如需重新打开面板，可以使用以下命令："
+info "NapCat: $NAPcat_URL"
+info "AstrBot: $ASTRBOT_URL"
+info "=================================================="
