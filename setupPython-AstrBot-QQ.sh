@@ -154,7 +154,7 @@ else
     # 安装sudo（如果未安装）
     apt-get install -y sudo
     cd "$HOME"
-    curl -o "$NAPCAT_SCRIPT" "https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh" && bash "$NAPCAT_SCRIPT"
+    curl -o "$NAPCAT_SCRIPT" "https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh" && bash "$NAPCAT_SCRIPT --cli n"
     if [ -d "$NAPCAT_DIR" ]; then
         info "✅ 猫猫框架安装成功˙"
     else
