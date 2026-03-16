@@ -141,7 +141,7 @@ info "检查 NapCat 安装状态..."
 NAPCAT_DIR="/root/Napcat"
 NAPCAT_SCRIPT="napcat.sh"
 
-if [ -d "$NAPCAT_DIR" ] && [ -f "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json" ]; 键，然后
+if [ -d "$NAPCAT_DIR" ] && [ -f "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json" ]; then
     info "✅ 检测到 NapCat 已安装在: $NAPCAT_DIR"
     # 检查NapCat是否运行（可选）
     if pgrep -f "napcat" >/dev/null 2>&1; then
