@@ -166,7 +166,7 @@ info "配置环境变量..."
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
 ASTRBOT_AUTOSTART='astrbot run &'
-
+NAPCAT_AUTOSTART='napcat &'
 # 检查并添加配置（避免重复）
 for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
     if ! grep -qF "$config" ~/.bashrc; then
@@ -189,7 +189,7 @@ ASTRBOT_URL="http://127.0.0.1:6185"
 # 询问是否打开NapCat面板
 echo ""
 read -p "是否打开NapCat(猫猫框架)管理面板？输入(y/n): " open_napcat
-if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
+if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; then
     info "正在打开NapCat管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$NAPCAT_URL"
@@ -205,7 +205,7 @@ fi
 # 询问是否打开AstrBot面板
 echo ""
 read -p "是否打开AstrBot(机器人框架)管理面板？输入(y/n): " open_astrbot
-if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
+if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; then
     info "正在打开AstrBot管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$ASTRBOT_URL"
