@@ -175,24 +175,60 @@ fi
     sleep 1
     info "AstrBot-core正在启动..."
     sleep 4
-  
-# =================== 额外变量 ===================
+
+  # =================== 额外变量 ===================
 info "配置环境变量..."
+
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
 ASTRBOT_STARTLINK='alias astrbot="cd $HOME/AstrBot && astrbot run"'
 ASTRBOT_AUTOSTART='astrbot'
 NAPCAT_AUTOSTART='xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &'
-# 检查并添加配置（避免重复）
-for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
-    if ! grep -q "$config" ~/.bashrc; then
-        echo "$config" >> ~/.bashrc
-        info "已添加: $config"
-    else
-        info "已存在，跳过: $config"
+
+# 创建一个临时文件来跟踪已添加的内容
+BASHRC="$HOME/.bashrc"
+TEMP_CHECK="/tmp/bashrc_check.$$"
+
+# 备份原文件
+cp "$BASHRC" "$BASHRC.bak"
+
+# 逐行检查并添加
+{
+    # 检查时区配置
+    if ! grep -q "^export TZ=" "$BASHRC"; then
+        echo "$TIMEZONE_CONFIG"
+        info "准备添加时区配置"
     fi
-done
+    
+    # 检查UV链接配置
+    if ! grep -q "^export UV_LINK_MODE=" "$BASHRC"; then
+        echo "$UV_LINK_CONFIG"
+        info "准备添加UV配置"
+    fi
+    
+    # 检查AstrBot别名
+    if ! grep -q "^alias astrbot=" "$BASHRC"; then
+        echo "$ASTRBOT_STARTLINK"
+        info "准备添加AstrBot别名"
+    fi
+    
+    # 检查AstrBot自动启动
+    if ! grep -q "^astrbot$" "$BASHRC"; then
+        echo "$ASTRBOT_AUTOSTART"
+        info "准备添加AstrBot自动启动"
+    fi
+    
+    # 检查NapCat自动启动
+    if ! grep -q "xvfb-run.*qq.*no-sandbox" "$BASHRC"; then
+        echo "$NAPCAT_AUTOSTART"
+        info "准备添加NapCat自动启动"
+    fi
+} >> "$BASHRC"
+
+# 显示添加结果
+info "配置添加完成，新添加的内容："
+tail -5 "$BASHRC"
 
 
 # ===================== 用户交互：打开链接 =====================
