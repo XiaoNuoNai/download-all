@@ -163,7 +163,7 @@ else
 fi
 
   # 启动应用
-    napcat & 
+    xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox & 
     astrbot run > /dev/null
     info "瞌睡猫正在赶来喵~"
     sleep 1
@@ -176,7 +176,7 @@ info "配置环境变量..."
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
 ASTRBOT_AUTOSTART='astrbot run &'
-NAPCAT_AUTOSTART='napcat &'
+NAPCAT_AUTOSTART='xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &'
 # 检查并添加配置（避免重复）
 for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
     if ! grep -qF "$config" ~/.bashrc; then
