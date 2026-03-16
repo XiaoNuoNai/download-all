@@ -78,6 +78,9 @@ else
     info "✅ 跳过 Python 编译安装"
 fi
 
+# 删除源码
+rm -rf /root/Python-3.12.12
+
 # ===================== 4. 配置环境变量 =====================
 info "配置 python/pip 默认 3.12"
 PATH_CONFIG='export PATH="/usr/local/bin:$PATH"'
@@ -184,12 +187,6 @@ info "=================================================="
 
 # ===================== 用户交互：打开链接 =====================
 export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
-
-# 获取NapCat的token（如果存在）
-NAPcat_TOKEN=""
-if [ -f "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json" ]; 键，然后
-    NAPcat_TOKEN=$(sed -n 's/.*"token": *"\([^"]*\)".*/\1/p' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json 2>/dev/null || echo "")
-fi
 
 # 构建完整URL
 NAPcat_URL="http://127.0.0.1:6099/webui?token=${NAPcat_TOKEN}"
