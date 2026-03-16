@@ -169,7 +169,7 @@ fi
 
   # 启动应用
     xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &
-    alias astrbot="cd $HOME/AstrBot && astrbot run"
+    alias astrbot="cd $HOME/AstrBot && uv run main.py"
     astrbot > /dev/null
     info "瞌睡猫正在赶来喵~"
     sleep 1
@@ -182,7 +182,7 @@ info "配置环境变量..."
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
-ASTRBOT_STARTLINK='alias astrbot="cd $HOME/AstrBot && astrbot run"'
+ASTRBOT_STARTLINK='alias astrbot="cd $HOME/AstrBot && uv run main.py"'
 ASTRBOT_AUTOSTART='astrbot'
 NAPCAT_AUTOSTART='xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &'
 
