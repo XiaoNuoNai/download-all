@@ -177,32 +177,26 @@ for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
     fi
 done
 
-# ===================== 完成 =====================
-info "=================================================="
-info "✅ 全都完成了哦"
-info "瞌睡猫管理面板在:127.0.0.1:6099"
-info "AstrBot的管理面板在:127.0.0.1:6185"
-echo "猫猫面板token:$(sed -n 's/.*"token": *"\([^"]*\)".*/\1/p' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json)"
-info "=================================================="
 
 # ===================== 用户交互：打开链接 =====================
 export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
 
 # 构建完整URL
-NAPcat_URL="http://127.0.0.1:6099/webui?token=${NAPcat_TOKEN}"
+NAPCAT_TOKEN="$(sed -n 's/.*"token": *"\([^"]*\)".*/\1/p' /root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json)"
+NAPCAT_URL="http://127.0.0.1:6099/webui?token=${NAPCAT_TOKEN}"
 ASTRBOT_URL="http://127.0.0.1:6185"
 
 # 询问是否打开NapCat面板
 echo ""
-read -p "是否打开NapCat(猫猫框架)管理面板？(y/n): " open_napcat
+read -p "是否打开NapCat(猫猫框架)管理面板？输入(y/n): " open_napcat
 if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
     info "正在打开NapCat管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
-        termux-open "$NAPcat_URL"
+        termux-open "$NAPCAT_URL"
         info "✅ NapCat面板已打开"
     else
         info "termux-open命令不可用，请手动打开链接："
-        echo "$NAPcat_URL"
+        echo "$NAPCAT_URL"
     fi
 else
     info "跳过打开NapCat面板"
@@ -210,7 +204,7 @@ fi
 
 # 询问是否打开AstrBot面板
 echo ""
-read -p "是否打开AstrBot(机器人框架)管理面板？(y/n): " open_astrbot
+read -p "是否打开AstrBot(机器人框架)管理面板？输入(y/n): " open_astrbot
 if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
     info "正在打开AstrBot管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
@@ -228,7 +222,8 @@ fi
 echo ""
 info "=================================================="
 info "🎉 安装流程全部完成！"
-info "如需重新打开面板，可以使用以下命令："
-info "NapCat: $NAPcat_URL"
+info "以后要重新打开面板 地址是这两个："
+info "猫猫面板: $NAPCAT_URL"
+  echo "猫猫令牌:$NAPCAT_TOKEN"
 info "AstrBot: $ASTRBOT_URL"
 info "=================================================="
