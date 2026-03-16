@@ -81,22 +81,27 @@ fi
 # 删除源码
 rm -rf /root/Python-3.12.12
 
-# ===================== 4. 配置环境变量 =====================
+# ==================== 4. 配置环境变量 =====================
 info "配置 python/pip 默认 3.12"
+
 PATH_CONFIG='export PATH="/usr/local/bin:$PATH"'
 ALIAS_PY='alias python="python3.12"'
 ALIAS_PIP='alias pip="pip3.12"'
+LOCAL_BIN='export PATH="$HOME/.local/bin:$PATH"'
 
 for f in "$HOME/.bashrc" "$HOME/.profile"; do
-  grep -qxF "${PATH_CONFIG}" "$f" || echo "${PATH_CONFIG}" >> "$f"
-  grep -qxF "${ALIAS_PY}" "$f" || echo "${ALIAS_PY}" >> "$f"
-  grep -qxF "${ALIAS_PIP}" "$f" || echo "${ALIAS_PIP}" >> "$f"
+    [ -f "$f" ] || continue
+    grep -qxF "${PATH_CONFIG}" "$f" || echo "${PATH_CONFIG}" >> "$f"
+    grep -qxF "${ALIAS_PY}" "$f" || echo "${ALIAS_PY}" >> "$f"
+    grep -qxF "${ALIAS_PIP}" "$f" || echo "${ALIAS_PIP}" >> "$f"
+    grep -qxF "${LOCAL_BIN}" "$f" || echo "${LOCAL_BIN}" >> "$f"  # 加在这里
 done
 
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 # 立即生效
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+alias python="python3.12" 2>/dev/null || true
+alias pip="pip3.12" 2>/dev/null || true
 
 # ===================== 5. 安装 uv =====================
 info "检查 uv 安装状态..."
