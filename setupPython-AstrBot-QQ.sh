@@ -185,7 +185,7 @@ ASTRBOT_STARTLINK="alias astrbot='cd $HOME/AstrBot && astrbot run'"
 ASTRBOT_AUTOSTART='astrbot'
 NAPCAT_AUTOSTART='xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &'
 # 检查并添加配置（避免重复）
-for config in"$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
+for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
     if ! grep -qF "$config" ~/.bashrc; then
         echo "$config" >> ~/.bashrc
         info "已添加: $config"
