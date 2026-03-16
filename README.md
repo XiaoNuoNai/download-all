@@ -17,10 +17,9 @@
 
    ･稳定的网络连接
   ## 安装方式
-  在终端应用中执行以下代码
+  在终端应用中执行以下一行命令
  
-   注:
-     #### 此命令部分不适宜多次执行
+   注: 此命令部分不适宜多次执行
  ```bash
 clear && termux-setup-storage && echo "先同意一下权限哦" && sleep 10 && echo "现在要更新一下系统˙" &&  pkg update -y && pkg upgrade -y  && echo "现在要安装一个虚拟的系统啦" && pkg install proot-distro -y  && proot-distro install ubuntu && echo "proot-distro login ubuntu" >> ~/.bashrc && proot-distro login ubuntu -- bash -c "echo \"已经进到环境里的系统啦˙ 现在 又要更新一下\" && apt update -y  && apt upgrade -y  && \
 clear && echo \"现在要干好多事 
