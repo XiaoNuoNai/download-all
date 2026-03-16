@@ -94,7 +94,7 @@ for f in "$HOME/.bashrc" "$HOME/.profile"; do
     grep -qxF "${PATH_CONFIG}" "$f" || echo "${PATH_CONFIG}" >> "$f"
     grep -qxF "${ALIAS_PY}" "$f" || echo "${ALIAS_PY}" >> "$f"
     grep -qxF "${ALIAS_PIP}" "$f" || echo "${ALIAS_PIP}" >> "$f"
-    grep -qxF "${LOCAL_BIN}" "$f" || echo "${LOCAL_BIN}" >> "$f"  # 加在这里
+    grep -qxF "${LOCAL_BIN}" "$f" || echo "${LOCAL_BIN}" >> "$f"
 done
 
 # 立即生效
@@ -168,8 +168,9 @@ else
 fi
 
   # 启动应用
-    xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox & 
-    astrbot run > /dev/null
+    xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &
+    alias astrbot='cd $HOME/AstrBot && astrbot run'
+    astrbot > /dev/null
     info "瞌睡猫正在赶来喵~"
     sleep 1
     info "AstrBot-core正在启动..."
@@ -180,10 +181,11 @@ info "配置环境变量..."
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
-ASTRBOT_AUTOSTART='astrbot run &'
+ASTRBOT_STARTLINK="alias astrbot='cd $HOME/AstrBot && astrbot run'"
+ASTRBOT_AUTOSTART='astrbot'
 NAPCAT_AUTOSTART='xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &'
 # 检查并添加配置（避免重复）
-for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_AUTOSTART"; do
+for config "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
     if ! grep -qF "$config" ~/.bashrc; then
         echo "$config" >> ~/.bashrc
         info "已添加: $config"
@@ -204,7 +206,7 @@ ASTRBOT_URL="http://127.0.0.1:6185"
 # 询问是否打开NapCat面板
 echo ""
 read -p "要去看看猫猫面板吗？输入(y/n): " open_napcat
-if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
+if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; then
     info "好喵..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$NAPCAT_URL"
@@ -220,7 +222,7 @@ fi
 # 询问是否打开AstrBot面板
 echo ""
 read -p "要看看Bot面板吗？输入(y/n): " open_astrbot
-if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
+if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; then
     info "正在打开Bot管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$ASTRBOT_URL"
