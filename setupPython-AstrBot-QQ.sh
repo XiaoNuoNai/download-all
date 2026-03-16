@@ -160,6 +160,14 @@ else
     fi
 fi
 
+  # 启动应用
+    napcat & 
+    astrbot run > /dev/null
+    info "瞌睡猫正在赶来喵~"
+    sleep 1
+    info "AstrBot-core正在启动..."
+    sleep 4
+  
 # =================== 额外变量 ===================
 info "配置环境变量..."
 # 定义要添加的内容
@@ -188,9 +196,9 @@ ASTRBOT_URL="http://127.0.0.1:6185"
 
 # 询问是否打开NapCat面板
 echo ""
-read -p "是否打开NapCat(猫猫框架)管理面板？输入(y/n): " open_napcat
-if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; then
-    info "正在打开NapCat管理面板..."
+read -p "要去看看猫猫面板吗？输入(y/n): " open_napcat
+if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
+    info "好喵..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$NAPCAT_URL"
         info "✅ NapCat面板已打开"
@@ -204,12 +212,12 @@ fi
 
 # 询问是否打开AstrBot面板
 echo ""
-read -p "是否打开AstrBot(机器人框架)管理面板？输入(y/n): " open_astrbot
-if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; then
-    info "正在打开AstrBot管理面板..."
+read -p "要看看Bot面板吗？输入(y/n): " open_astrbot
+if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
+    info "正在打开Bot管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$ASTRBOT_URL"
-        info "✅ AstrBot应该打开啦˙"
+        info "✅ Bot打开啦˙"
     else
         info "termux-open命令不可用，请手动打开链接："
         echo "$ASTRBOT_URL"
