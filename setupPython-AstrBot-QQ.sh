@@ -199,10 +199,10 @@ for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT
     if ! grep -qF "$config" ~/.bashrc; then
         echo "$config" >> ~/.bashrc
         info "已添加: $config"
-      fi
-  else
+    else
         info "已存在，跳过: $config"
-
+      fi
+  done
 # ===================== 用户交互：打开链接 =====================
 export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
 
