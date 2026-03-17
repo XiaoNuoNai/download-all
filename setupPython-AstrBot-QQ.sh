@@ -122,19 +122,30 @@ fi
 export UV_LINK_MODE=copy
 
 # ===================== 6. 安装 AstrBot =====================
+# ===================== 6. 安装 AstrBot =====================
 info "检查 AstrBot 安装状态..."
 ASTRBOT_DIR="$HOME/AstrBot"
-if [ -d "$ASTRBOT_DIR" ] && command -v astrbot >/dev/null 2>&1; then
-    ASTRBOT_VERSION=$(astrbot --version 2>&1 | head -n1 || echo "版本未知")
-    info "✅ 检测到 AstrBot 已安装在: $ASTRBOT_DIR"
-    info "AstrBot 版本: $ASTRBOT_VERSION"
+ASTRBOT_INSTALLED_FLAG="$ASTRBOT_DIR/.installation_complete"
+
+if [ -f "$ASTRBOT_INSTALLED_FLAG" ]; then
+    info "✅ 检测到 AstrBot 已完成安装"
 else
-    info "未检测到 AstrBot，开始安装..."
+    if [ -d "$ASTRBOT_DIR" ]; then
+        info "检测到不完整的安装（目录存在但未完成），重新安装..."
+        rm -rf "$ASTRBOT_DIR"
+    else
+        info "未检测到 AstrBot，开始安装..."
+    fi
+    
+    # 创建目录并安装
     cd "$HOME"
     mkdir -p AstrBot
     cd AstrBot
-    uv tool install astrbot && echo -e "y\ny\n" | astrbot init
-    if [ -d "$ASTRBOT_DIR" ] && command -v astrbot >/dev/null 2>&1; then
+    
+    # 执行安装
+    if uv tool install astrbot && echo -e "y\ny\n" | astrbot init; then
+        # 创建安装完成标记文件
+        touch "$ASTRBOT_INSTALLED_FLAG"
         info "✅ AstrBot 安装成功"
     else
         error "AstrBot 安装失败"
@@ -177,59 +188,19 @@ fi
     sleep 4
 
   # =================== 额外变量 ===================
-info "配置环境变量..."
-
 # 定义要添加的内容
 TIMEZONE_CONFIG='export TZ="Asia/Shanghai"'
 UV_LINK_CONFIG='export UV_LINK_MODE=copy'
-ASTRBOT_STARTLINK='alias astrbot="cd $HOME/AstrBot && uv run main.py"'
+ASTRBOT_STARTLINK='alias astrbot="cd $HOME/AstrBot && astrbot run &"'
 ASTRBOT_AUTOSTART='astrbot'
-NAPCAT_AUTOSTART='xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &'
-
-# 创建一个临时文件来跟踪已添加的内容
-BASHRC="$HOME/.bashrc"
-TEMP_CHECK="/tmp/bashrc_check.$$"
-
-# 备份原文件
-cp "$BASHRC" "$BASHRC.bak"
-
-# 逐行检查并添加
-{
-    # 检查时区配置
-    if ! grep -q "^export TZ=" "$BASHRC"; then
-        echo "$TIMEZONE_CONFIG"
-        info "准备添加时区配置"
-    fi
-    
-    # 检查UV链接配置
-    if ! grep -q "^export UV_LINK_MODE=" "$BASHRC"; then
-        echo "$UV_LINK_CONFIG"
-        info "准备添加UV配置"
-    fi
-    
-    # 检查AstrBot别名
-    if ! grep -q "^alias astrbot=" "$BASHRC"; then
-        echo "$ASTRBOT_STARTLINK"
-        info "准备添加AstrBot别名"
-    fi
-    
-    # 检查AstrBot自动启动
-    if ! grep -q "^astrbot$" "$BASHRC"; then
-        echo "$ASTRBOT_AUTOSTART"
-        info "准备添加AstrBot自动启动"
-    fi
-    
-    # 检查NapCat自动启动
-    if ! grep -q "xvfb-run.*qq.*no-sandbox" "$BASHRC"; then
-        echo "$NAPCAT_AUTOSTART"
-        info "准备添加NapCat自动启动"
-    fi
-} >> "$BASHRC"
-
-# 显示添加结果
-info "配置添加完成，新添加的内容："
-tail -5 "$BASHRC"
-
+NAPCAT_AUTOSTART='alias napcat="xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &"'
+# 检查并添加配置（避免重复）
+for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
+    if ! grep -qF "$config" ~/.bashrc; then
+        echo "$config" >> ~/.bashrc
+        info "已添加: $config"
+    else
+        info "已存在，跳过: $config"
 
 # ===================== 用户交互：打开链接 =====================
 export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
