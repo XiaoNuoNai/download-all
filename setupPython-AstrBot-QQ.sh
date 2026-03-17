@@ -153,35 +153,40 @@ else
 fi
 
 # ===================== 7. 安装 NapCat =====================
+
 info "检查 NapCat 安装状态..."
 NAPCAT_DIR="/root/Napcat"
 NAPCAT_SCRIPT="napcat.sh"
+NAPCAT_INSTALLED_FLAG="$NAPCAT_DIR/.installation_complete"
 
-if [ -d "$NAPCAT_DIR" ] && [ -f "/root/Napcat/opt/QQ/resources/app/app_launcher/napcat/config/webui.json" ]; then
-    info "✅ 检测到 NapCat 已安装在: $NAPCAT_DIR"
-    # 检查NapCat是否运行（可选）
-    if pgrep -f "napcat" >/dev/null 2>&1; then
-        info "NapCat 服务正在运行"
-    else
-        info "NapCat 服务未运行"
-    fi
+if [ -f "$NAPCAT_INSTALLED_FLAG" ]; then
+    info "✅ 检测到 NapCat 已完成安装"
 else
-    info "未检测到 NapCat，开始安装..."
+    if [ -d "$NAPCAT_DIR" ]; then
+        info "检测到不完整的安装（目录存在但未完成），重新安装..."
+        rm -rf "$NAPCAT_DIR"
+    else
+        info "未检测到 NapCat，开始安装..."
+    fi
+    
     # 安装sudo（如果未安装）
     apt-get install -y sudo
     cd "$HOME"
-    curl -o "$NAPCAT_SCRIPT" "https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh" && bash "$NAPCAT_SCRIPT"  --cli n
-    if [ -d "$NAPCAT_DIR" ]; then
-        info "✅ 猫猫框架安装成功˙"
+    
+    # 下载并执行安装脚本
+    if curl -o "$NAPCAT_SCRIPT" "https://nclatest.znin.net/NapNeko/NapCat-Installer/main/script/install.sh" && bash "$NAPCAT_SCRIPT" --cli n; then
+        # 创建安装完成标记文件
+        mkdir -p "$NAPCAT_DIR"
+        touch "$NAPCAT_INSTALLED_FLAG"
+        info "✅ 猫猫框架安装成功"
     else
         error "NapCat 安装失败"
     fi
 fi
-
   # 启动应用
     xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &
     alias astrbot="cd $HOME/AstrBot && astrbot run &"
-    astrbot > /dev/null
+    astrbot run > /dev/null &
     info "瞌睡猫正在赶来喵~"
     sleep 1
     info "AstrBot-core正在启动..."
@@ -195,7 +200,7 @@ ASTRBOT_STARTLINK='alias astrbot="cd $HOME/AstrBot && astrbot run &"'
 ASTRBOT_AUTOSTART='astrbot'
 NAPCAT_AUTOSTART='alias napcat="xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &"'
 # 检查并添加配置（避免重复）
-for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
+for config 在 "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT_AUTOSTART" "$ASTRBOT_AUTOSTART"; do
     if ! grep -qF "$config" ~/.bashrc; then
         echo "$config" >> ~/.bashrc
         info "已添加: $config"
@@ -214,7 +219,7 @@ ASTRBOT_URL="http://127.0.0.1:6185"
 # 询问是否打开NapCat面板
 echo ""
 read -p "要去看看猫猫面板吗？输入(y/n): " open_napcat
-if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; then
+if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
     info "好喵..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$NAPCAT_URL"
@@ -230,7 +235,7 @@ fi
 # 询问是否打开AstrBot面板
 echo ""
 read -p "要看看Bot面板吗？输入(y/n): " open_astrbot
-if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; then
+if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
     info "正在打开Bot管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$ASTRBOT_URL"
