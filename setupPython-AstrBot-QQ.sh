@@ -122,7 +122,7 @@ fi
 export UV_LINK_MODE=copy
 
 # ===================== 6. 安装 AstrBot =====================
-# ===================== 6. 安装 AstrBot =====================
+
 info "检查 AstrBot 安装状态..."
 ASTRBOT_DIR="$HOME/AstrBot"
 ASTRBOT_INSTALLED_FLAG="$ASTRBOT_DIR/.installation_complete"
@@ -199,7 +199,8 @@ for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT
     if ! grep -qF "$config" ~/.bashrc; then
         echo "$config" >> ~/.bashrc
         info "已添加: $config"
-    else
+      fi
+  else
         info "已存在，跳过: $config"
 
 # ===================== 用户交互：打开链接 =====================
