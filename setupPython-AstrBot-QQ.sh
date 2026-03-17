@@ -208,6 +208,7 @@ for config in "$TIMEZONE_CONFIG" "$UV_LINK_CONFIG" "$ASTRBOT_STARTLINK" "$NAPCAT
         info "已存在，跳过: $config"
       fi
   done
+  sleep 10
 # ===================== 用户交互：打开链接 =====================
 export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
 
