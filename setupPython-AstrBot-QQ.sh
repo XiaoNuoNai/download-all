@@ -184,9 +184,9 @@ else
     fi
 fi
   # 启动应用
-    xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &
+    xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox > /dev/null &
     alias astrbot="cd $HOME/AstrBot && astrbot run &"
-    astrbot run > /dev/null &
+    cd ~/AstrBot && astrbot run > /dev/null &
     info "瞌睡猫正在赶来喵~"
     sleep 1
     info "AstrBot-core正在启动..."
