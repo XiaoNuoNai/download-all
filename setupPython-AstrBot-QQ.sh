@@ -180,7 +180,7 @@ fi
 
   # 启动应用
     xvfb-run -a /root/Napcat/opt/QQ/qq --no-sandbox &
-    alias astrbot="cd $HOME/AstrBot && uv run main.py"
+    alias astrbot="cd $HOME/AstrBot && astrbot run &"
     astrbot > /dev/null
     info "瞌睡猫正在赶来喵~"
     sleep 1
