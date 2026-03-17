@@ -219,7 +219,7 @@ ASTRBOT_URL="http://127.0.0.1:6185"
 # 询问是否打开NapCat面板
 echo ""
 read -p "要去看看猫猫面板吗？输入(y/n): " open_napcat
-if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; 键，然后
+if [[ $open_napcat == "y" || $open_napcat == "Y" ]]; then
     info "好喵..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$NAPCAT_URL"
@@ -235,11 +235,11 @@ fi
 # 询问是否打开AstrBot面板
 echo ""
 read -p "要看看Bot面板吗？输入(y/n): " open_astrbot
-if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; 键，然后
+if [[ $open_astrbot == "y" || $open_astrbot == "Y" ]]; then
     info "正在打开Bot管理面板..."
     if command -v termux-open >/dev/null 2>&1; then
         termux-open "$ASTRBOT_URL"
-        info "✅ Bot打开啦˙"
+        info "✅ Bot管理面板打开啦˙"
     else
         info "termux-open命令不可用，请手动打开链接："
         echo "$ASTRBOT_URL"
