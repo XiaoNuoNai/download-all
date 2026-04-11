@@ -13,6 +13,7 @@ error() { echo -e "\033[31m[ERROR] $*\033[0m"; exit 1; }
 
 # ===================== 1. 安装系统依赖 =====================
 info "更新系统并安装编译依赖..."
+apt update
 apt install -y \
   build-essential wget curl git libssl-dev libbz2-dev libreadline-dev \
   libsqlite3-dev libffi-dev zlib1g-dev libncurses5-dev libgdbm-dev \
