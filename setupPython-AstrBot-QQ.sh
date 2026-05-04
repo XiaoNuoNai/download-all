@@ -105,6 +105,7 @@ alias python="python3.12" 2>/dev/null || true
 alias pip="pip3.12" 2>/dev/null || true
 
 # ===================== 5. 安装 uv =====================
+cd ~/
 info "检查 uv 安装状态..."
 if command -v uv >/dev/null 2>&1; then
     UV_VERSION=$(uv --version 2>&1 | head -n1)
